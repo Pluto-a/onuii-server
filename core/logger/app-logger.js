@@ -1,29 +1,31 @@
-import * as winston from 'winston'
-import * as rotate from 'winston-daily-rotate-file'
-import config from '../config/config'
+import * as winston from 'winston';
+// eslint-disable-next-line no-unused-vars
+import * as rotate from 'winston-daily-rotate-file';
+import config from '../config/config';
+// eslint-disable-next-line import/imports-first
 import * as fs from 'fs';
 
 const dir = config.logFileDir;
 
 if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir);
+  fs.mkdirSync(dir);
 }
- 
 
-let logger = new winston.Logger({
-    level: 'info',
-    transports: [
-        new (winston.transports.Console)({
-            colorize: true,
-        }),
-        new winston.transports.DailyRotateFile({
-            filename: config.logFileName,
-            dirname: config.logFileDir,
-            maxsize: 20971520, //20MB
-            maxFiles: 25,
-            datePattern: '.dd-MM-yyyy'
-        })
-    ]
+
+const logger = new winston.Logger({
+  level: 'info',
+  transports: [
+    new (winston.transports.Console)({
+      colorize: true,
+    }),
+    new winston.transports.DailyRotateFile({
+      filename: config.logFileName,
+      dirname: config.logFileDir,
+      maxsize: 20971520, // 20MB
+      maxFiles: 25,
+      datePattern: '.dd-MM-yyyy',
+    }),
+  ],
 });
 
 export default logger;
