@@ -3,6 +3,14 @@ import mysql from 'sync-mysql';
 import logger from '../core/logger/app-logger';
 import config from '../core/config/config';
 import redis from 'redis';
+import {MysqlRedisAsync, HashTypes, Caching} from 'mysql-redis';
+
+const cacheOptions = {
+  expire: 2629746,// seconds, defaults to 30 days
+  keyPrefix: "sql.", // default
+  hashType: HashTypes.md5, //default
+  caching: Caching.CACHE //default
+};
 
 const redisConn = redis.createClient({
   host: config.redisHost,
@@ -19,7 +27,29 @@ const connection = new mysql({
   database: config.mysqlDatabase,
 });
 
-// eslint-disable-next-line no-plusplus
+const mysqlRedis = new MysqlRedisAsync(
+    connection,
+    redisConn,
+    cacheOptions,
+);
+
+let result;
+let fields;
+let data;
+async function a(sql){
+  try{
+
+    [result, fields, data] = await mysqlRedis.query(sql, );
+    console.log(result);
+    }catch(err){
+      console.log(err);
+  }
+return result;
+}
+
+
+a('select a.user_id, a.score + b.style_score as total from (select a.user_id, a.cond_score + b.status_score as score from (select a.user_id, count(b.cond_id) as cond_score from user a left join user_cond b on a.user_id = b.user_id group by a.user_id) a left join (select a.user_id, count(b.status_id)*5 as status_score from user a left join user_status b on a.user_id = b.user_id group by a.user_id) b on a.user_id = b.user_id) a left join (select a.user_id, count(b.style_id)*3 as style_score from user a left join user_style b on a.user_id = b.user_id group by a.user_id) b on a.user_id = b.user_id order by total desc');
+
 if(connection.query('select * from user').length < 1){
 for (let aa = 1; aa < 1001; aa++) {
   connection.query(`insert into user(user_name) values(${aa})`);

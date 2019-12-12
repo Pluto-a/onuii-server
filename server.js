@@ -1,4 +1,3 @@
-// 라이브러리들을 임포트해줍니다.
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
