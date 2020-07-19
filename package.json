@@ -29,7 +29,7 @@
     "fcm-node": "^1.3.0",
     "fs": "0.0.1-security",
     "html-pdf": "^2.2.0",
-    "lodash": "^4.15.0",
+    "lodash": "^4.17.19",
     "mongoose": "^4.8.6",
     "morgan": "^1.8.2",
     "multer": "^1.4.0",
